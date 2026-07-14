@@ -1,4 +1,4 @@
-# Remarkable News
+# reMarkable News
 
 Reliable self-hosted RSS-to-PDF delivery for reMarkable tablets.
 
