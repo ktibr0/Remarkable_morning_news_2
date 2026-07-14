@@ -1,0 +1,61 @@
+name: remarkable-news
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        RMAPI_VERSION: 434da60d178dd04e0659fb502ea1251600c5d6ef
+    image: remarkable-news:local
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8000:8000"
+    environment:
+      TZ: Europe/Moscow
+      APP_TIMEZONE: Europe/Moscow
+      APP_DATA_DIR: /data
+      GOTENBERG_URL: http://gotenberg:3000
+      HOME: /config
+      XDG_CONFIG_HOME: /config
+      XDG_DATA_HOME: /config
+      RMAPI_CONFIG: /config/rmapi.conf
+      RMAPI_CONCURRENT: "4"
+    volumes:
+      - ./data:/data
+      - rmapi_config:/config
+    depends_on:
+      gotenberg:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - internal
+
+  gotenberg:
+    image: gotenberg/gotenberg:8-chromium
+    restart: unless-stopped
+    init: true
+    command:
+      - gotenberg
+      - --api-timeout=120s
+      - --chromium-disable-javascript=true
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - internal
+
+volumes:
+  rmapi_config:
+
+networks:
+  internal:
+    driver: bridge

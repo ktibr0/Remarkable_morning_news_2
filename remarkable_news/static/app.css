@@ -1,0 +1,38 @@
+:root { --ink:#182018; --muted:#647064; --paper:#f4f1e8; --card:#fffef9; --line:#d9d5c9; --green:#315c43; --red:#9e3f35; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+header { max-width:1180px; margin:auto; padding:32px 28px 18px; display:flex; align-items:end; justify-content:space-between; gap:20px; }
+h1,h2 { font-family:Georgia,serif; margin:0; } h1 { font-size:36px; } h2 { font-size:21px; }
+.eyebrow { color:var(--green); font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:11px; }
+.header-actions { display:flex; align-items:end; gap:12px; }
+.language-picker { margin:0; min-width:132px; }
+.language-picker span { color:var(--muted); font-size:12px; }
+nav { max-width:1180px; margin:auto; padding:0 28px; display:flex; gap:4px; overflow:auto; border-bottom:1px solid var(--line); }
+nav button { border:0; background:transparent; padding:12px 14px; color:var(--muted); white-space:nowrap; cursor:pointer; }
+nav button.active { color:var(--ink); border-bottom:3px solid var(--green); }
+main { max-width:1180px; margin:auto; padding:24px 28px 60px; }
+.tab { display:none; } .tab.active { display:block; }
+.panel, fieldset { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:18px; }
+.panel-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; }
+.stats { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:18px; }
+.stat { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; }
+.stat strong { display:block; font:28px Georgia,serif; } .stat span { color:var(--muted); font-size:13px; }
+button { font:inherit; border-radius:7px; padding:9px 14px; cursor:pointer; }
+button.primary { border:1px solid var(--green); background:var(--green); color:white; font-weight:650; }
+button.ghost { border:1px solid var(--line); background:var(--card); color:var(--ink); }
+button.danger { border:0; background:transparent; color:var(--red); padding:5px; }
+button:disabled { opacity:.5; cursor:wait; }
+label { display:flex; flex-direction:column; gap:5px; margin:10px 0; color:var(--muted); font-size:13px; }
+input,select { width:100%; border:1px solid var(--line); background:white; padding:10px; border-radius:6px; color:var(--ink); font:inherit; }
+label.check { flex-direction:row; align-items:center; color:var(--ink); } label.check input { width:auto; }
+.inline-form { display:flex; align-items:end; gap:12px; } .grow { flex:1; }
+.settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+fieldset { margin:0 0 18px; } legend { font:19px Georgia,serif; padding:0 6px; }
+table { width:100%; border-collapse:collapse; } th,td { text-align:left; border-bottom:1px solid var(--line); padding:10px 8px; vertical-align:top; } th { color:var(--muted); font-size:12px; }
+.pill { display:inline-block; border-radius:99px; padding:2px 8px; font-size:12px; background:#e7ece7; } .pill.failed,.pill.dead,.pill.upload_failed { background:#f4deda; color:var(--red); } .pill.partial { background:#f2e6c7; }
+.url { max-width:460px; overflow-wrap:anywhere; font-size:12px; color:var(--muted); }
+.empty { text-align:center; color:var(--muted); padding:28px; }
+pre { background:#1e251f; color:#e5eee5; padding:12px; border-radius:6px; white-space:pre-wrap; max-height:240px; overflow:auto; }
+#toast { position:fixed; right:24px; bottom:24px; background:var(--ink); color:white; padding:12px 18px; border-radius:7px; opacity:0; transform:translateY(10px); transition:.2s; pointer-events:none; max-width:420px; }
+#toast.show { opacity:1; transform:none; } #toast.error { background:var(--red); }
+@media(max-width:800px) { .stats { grid-template-columns:1fr 1fr; } .settings-grid { grid-template-columns:1fr; } .inline-form { align-items:stretch; flex-direction:column; } header { align-items:flex-start; flex-direction:column; } .header-actions { width:100%; align-items:stretch; } .header-actions .primary { flex:1; } table { display:block; overflow:auto; } }

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Remarkable News</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header>
+    <div><span class="eyebrow">RSS → PDF → reMarkable</span><h1>Remarkable News</h1></div>
+    <div class="header-actions">
+      <label class="language-picker"><span data-i18n="language">Language</span><select id="language-select"><option value="en">English</option><option value="ru">Русский</option></select></label>
+      <button id="run-now" class="primary" data-i18n="runNow">Build edition</button>
+    </div>
+  </header>
+  <nav>
+    <button data-tab="overview" class="active" data-i18n="tabOverview">Overview</button>
+    <button data-tab="feeds" data-i18n="tabFeeds">Feeds</button>
+    <button data-tab="settings" data-i18n="tabSettings">Layout & collection</button>
+    <button data-tab="remarkable">reMarkable</button>
+    <button data-tab="issues" data-i18n="tabIssues">Log</button>
+    <button data-tab="editions" data-i18n="tabEditions">Editions</button>
+  </nav>
+  <main>
+    <section id="overview" class="tab active">
+      <div id="stats" class="stats"></div>
+      <div class="panel"><div class="panel-head"><h2 data-i18n="latestRuns">Latest runs</h2><button class="ghost refresh" data-i18n="refresh">Refresh</button></div><div id="runs"></div></div>
+    </section>
+
+    <section id="feeds" class="tab">
+      <div class="panel">
+        <h2 data-i18n="newFeed">New feed</h2>
+        <form id="feed-form" class="inline-form">
+          <label><span data-i18n="feedName">Name</span><input name="name" required maxlength="200" placeholder="Hacker News"></label>
+          <label class="grow"><span data-i18n="feedUrl">RSS URL</span><input name="url" required type="url" placeholder="https://example.com/rss"></label>
+          <button class="primary" data-i18n="add">Add</button>
+        </form>
+      </div>
+      <div class="panel"><div class="panel-head"><h2 data-i18n="feeds">Feeds</h2><button class="ghost refresh" data-i18n="refresh">Refresh</button></div><div id="feed-list"></div></div>
+    </section>
+
+    <section id="settings" class="tab">
+      <form id="settings-form">
+        <div class="settings-grid">
+          <fieldset><legend data-i18n="scheduleVolume">Schedule & volume</legend>
+            <label class="check"><input name="schedule_enabled" type="checkbox"> <span data-i18n="automaticCollection">Automatic collection</span></label>
+            <label><span data-i18n="intervalMinutes">Interval, minutes</span><input name="schedule_interval_minutes" type="number" min="5"></label>
+            <label><span data-i18n="itemsPerFeed">Items per feed</span><input name="max_items_per_feed" type="number" min="1"></label>
+            <label><span data-i18n="lookbackHours">Look back, hours</span><input name="article_lookback_hours" type="number" min="1"></label>
+            <label><span data-i18n="articlesPerEdition">Articles per edition</span><input name="max_articles_per_edition" type="number" min="1"></label>
+            <label><span data-i18n="retentionDays">Keep editions, days</span><input name="retention_days" type="number" min="1"></label>
+          </fieldset>
+          <fieldset><legend data-i18n="textReliability">Text reliability</legend>
+            <label class="check"><input name="prefer_full_article" type="checkbox"> <span data-i18n="preferFullArticle">Try to extract full articles</span></label>
+            <label><span data-i18n="minimumContent">Minimum useful characters</span><input name="minimum_content_chars" type="number" min="50"></label>
+            <label><span data-i18n="requestTimeout">Site timeout, seconds</span><input name="request_timeout_seconds" type="number" min="5"></label>
+            <label><span data-i18n="retryAttempts">Retry attempts</span><input name="retry_attempts" type="number" min="1"></label>
+            <label><span data-i18n="retryBase">First retry delay, minutes</span><input name="retry_base_minutes" type="number" min="1"></label>
+            <label class="check"><input name="create_empty_editions" type="checkbox"> <span data-i18n="createEmptyEditions">Create editions without new articles</span></label>
+          </fieldset>
+          <fieldset><legend data-i18n="printLayout">Print layout</legend>
+            <label><span data-i18n="editionTitle">Edition title</span><input name="edition_title" maxlength="100"></label>
+            <label><span data-i18n="paperSize">Paper size</span><select name="paper_size"><option>A4</option><option>A5</option><option>Letter</option></select></label>
+            <label><span data-i18n="fontSize">Font size, pt</span><input name="font_size_pt" type="number" min="7" step="0.5"></label>
+            <label><span data-i18n="lineHeight">Line height</span><input name="line_height" type="number" min="1" max="2.5" step="0.05"></label>
+            <label><span data-i18n="pageMargins">Page margins, mm</span><input name="page_margin_mm" type="number" min="5"></label>
+            <label class="check"><input name="article_page_break" type="checkbox"> <span data-i18n="articlePageBreak">Start each article on a new page</span></label>
+          </fieldset>
+          <fieldset><legend data-i18n="imagesCaptions">Images & captions</legend>
+            <label class="check"><input name="include_images" type="checkbox"> <span data-i18n="includeImages">Include images</span></label>
+            <label><span data-i18n="maxImageBytes">Max bytes per image</span><input name="max_image_bytes" type="number" min="100000"></label>
+            <label class="check"><input name="show_source" type="checkbox"> <span data-i18n="showSource">Show source</span></label>
+            <label class="check"><input name="show_date" type="checkbox"> <span data-i18n="showDate">Show date</span></label>
+            <label class="check"><input name="show_links" type="checkbox"> <span data-i18n="showLinks">Print links</span></label>
+          </fieldset>
+        </div>
+        <button class="primary" data-i18n="saveSettings">Save settings</button>
+      </form>
+    </section>
+
+    <section id="remarkable" class="tab">
+      <div class="settings-grid">
+        <div class="panel">
+          <h2 data-i18n="connection">Connection</h2><p id="rmapi-state" class="status"></p>
+          <p data-i18n="remarkableConnectHelp">Open the reMarkable page, get a one-time code, and paste it below.</p>
+          <p><a href="https://my.remarkable.com/device/desktop/connect" target="_blank" rel="noopener" data-i18n="getOneTimeCode">Get one-time code ↗</a></p>
+          <form id="auth-form" class="inline-form"><label class="grow"><span data-i18n="oneTimeCode">One-time code</span><input name="code" autocomplete="off" required></label><button class="primary" data-i18n="connect">Connect</button></form>
+          <button id="test-rmapi" class="ghost" data-i18n="testConnection">Test connection</button>
+          <button id="reset-rmapi" class="danger" data-i18n="resetTokens">Reset tokens</button>
+          <pre id="rmapi-output"></pre>
+        </div>
+        <form id="remarkable-form" class="panel">
+          <h2 data-i18n="delivery">Delivery</h2>
+          <label class="check"><input name="remarkable_enabled" type="checkbox"> <span data-i18n="autoSend">Automatically send editions</span></label>
+          <label><span data-i18n="tabletFolder">Folder on tablet</span><input name="remarkable_folder" placeholder="/News"></label>
+          <label class="check"><input name="remarkable_force_overwrite" type="checkbox"> <span data-i18n="overwriteSameName">Overwrite file with the same name</span></label>
+          <button class="primary" data-i18n="save">Save</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="issues" class="tab">
+      <div class="panel"><div class="panel-head"><h2 data-i18n="issuesWarnings">Issues & warnings</h2><div><button id="retry-all" class="ghost" data-i18n="retryFailedUrls">Retry failed URLs</button> <button class="ghost refresh" data-i18n="refresh">Refresh</button></div></div><div id="issue-list"></div></div>
+    </section>
+
+    <section id="editions" class="tab">
+      <div class="panel"><div class="panel-head"><h2 data-i18n="savedPdfs">Saved PDFs</h2><button class="ghost refresh" data-i18n="refresh">Refresh</button></div><div id="edition-list"></div></div>
+    </section>
+  </main>
+  <div id="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

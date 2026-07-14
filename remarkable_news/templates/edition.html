@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ settings.edition_title }}</title>
+  <style>
+    @page { size: {{ settings.paper_size }} portrait; margin: {{ settings.page_margin_mm }}mm; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #111; background: #fff; font-family: Arial, Helvetica, sans-serif; font-size: {{ settings.font_size_pt }}pt; line-height: {{ settings.line_height }}; }
+    .cover { min-height: 230mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; break-after: page; }
+    .cover h1 { font-size: 30pt; margin: 0 0 8mm; }
+    .cover p { color: #555; }
+    article { {% if settings.article_page_break %}break-before: page;{% endif %} margin-bottom: 12mm; }
+    article h1 { font-size: 21pt; line-height: 1.18; margin: 0 0 3mm; }
+    article h2, article h3 { break-after: avoid; }
+    .meta { color: #555; font-size: 9.5pt; margin-bottom: 5mm; }
+    p { orphans: 3; widows: 3; }
+    img { display: block; max-width: 100%; max-height: 155mm; object-fit: contain; margin: 4mm auto; break-inside: avoid; filter: grayscale(100%); }
+    blockquote { border-left: 1.5mm solid #777; margin-left: 0; padding-left: 5mm; color: #333; }
+    pre, code { white-space: pre-wrap; overflow-wrap: anywhere; font-family: monospace; font-size: 9.5pt; }
+    table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+    td, th { border: .3mm solid #999; padding: 1.5mm; }
+    a { color: #111; text-decoration: {% if settings.show_links %}underline{% else %}none{% endif %}; }
+    .source-url { font-size: 8pt; overflow-wrap: anywhere; color: #555; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <h1>{{ settings.edition_title }}</h1>
+    <p>{{ generated_at.strftime('%d.%m.%Y, %H:%M') }}</p>
+    <p>{{ articles|length }} article{% if articles|length != 1 %}s{% endif %}</p>
+  </section>
+  {% for article in articles %}
+  <article>
+    <h1>{{ article.title }}</h1>
+    <div class="meta">
+      {% if settings.show_source %}{{ article.feed_name }}{% endif %}
+      {% if settings.show_date and article.published_at %} · {{ article.published_at[:16].replace('T', ' ') }} UTC{% endif %}
+      {% if article.author %} · {{ article.author }}{% endif %}
+    </div>
+    <div class="content">{{ article.content_html|safe }}</div>
+    {% if settings.show_links and article.url.startswith('http') %}<p class="source-url">Source: {{ article.url }}</p>{% endif %}
+  </article>
+  {% endfor %}
+</body>
+</html>
